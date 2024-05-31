@@ -104,6 +104,18 @@ const CourseInfo = {
     }
     return maxPoint;
   }
+  function getDueDate(assignId){
+    let aobj=AssignmentGroup.assignments;
+    let dueDate;
+    for(let i=0;i<aobj.length;i++){
+        if(aobj[i].id==assignId){
+            dueDate=aobj[i].due_at;
+           
+        }
+       
+    }
+    return dueDate;
+  }
  //Function to get the Assignment Ids of a leaner
   function getAssignIds(lid){
     let assignIdLocal=[];
@@ -158,12 +170,18 @@ const CourseInfo = {
         console.log(finalObjects);
         for(let j=0;j<assignIds.length;j++)
             {
+               let dueDate=getDueDate(assignIds[j]);
+               let dueDateFinal= new Date(dueDate)
+               let currentDate= new Date('2024-5-31');
+               if(dueDateFinal.valueOf()>currentDate.valueOf())
+                {
+                  console.log("This assignment is not due yet");
+                  break;
+                }
                 console.log(assignIds[j]);
                 let score=getScoreFromLeanerSub(lid,assignIds[j]);
                 let scoreParsed=parseInt(score);
                 let submissionDate=getSubmissionDateFromLeanerSub(lid,assignIds[j]);
-                console.log("Submission Date");
-                console.log(submissionDate);
                 let date2=new Date(submissionDate);
                 let pointMax=getPointsPossible(assignIds[j]);
                 if(pointMax==0){
