@@ -91,8 +91,7 @@ const CourseInfo = {
     console.log(nodupliIds+" Learner idsss");
     return nodupliIds;
   }
-  console.log("Leaner id "+learner_Ids);
-  //const maxPoints=getPointsPossible(2);
+  //Funtion to get the Points Possible
   function getPointsPossible(assignId){
     let aobj=AssignmentGroup.assignments;
     let maxPoint;
@@ -105,7 +104,7 @@ const CourseInfo = {
     }
     return maxPoint;
   }
- 
+ //Function to get the Assignment Ids of a leaner
   function getAssignIds(lid){
     let assignIdLocal=[];
     LearnerSubmissions.forEach(element => {
@@ -164,7 +163,7 @@ const CourseInfo = {
                 let scoreParsed=parseInt(score);
                 let submissionDate=getSubmissionDateFromLeanerSub(lid,assignIds[j]);
                 console.log("Submission Date");
-                 console.log(submissionDate);
+                console.log(submissionDate);
                 let date2=new Date(submissionDate);
                 let pointMax=getPointsPossible(assignIds[j]);
                 if(pointMax==0){
@@ -177,7 +176,6 @@ const CourseInfo = {
                   }
                 scoreSum=scoreSum+scoreParsed;
                 pointMaxSum=pointMaxSum+pointMax;
-                console.log(averageLocal);
                 let aid=parseInt(assignIds[j]);
                 finalObjects[aid]=averageLocal.toFixed(3);
                 console.log("Score= "+scoreParsed+" Point Max= "+pointMax);
@@ -199,6 +197,7 @@ const CourseInfo = {
 
   try {
     const result = getLearnerData(CourseInfo, AssignmentGroup, LearnerSubmissions);
+    console.log("Final Array: ");
     console.log(result);
   } catch (error) {
     console.error(error);
