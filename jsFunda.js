@@ -76,29 +76,7 @@ const CourseInfo = {
     }
   ];
   
- /* function getLearnerData(course, ag, submissions) {
-    // here, we would process this data to achieve the desired result.
-    const result = [
-      {
-        id: 125,
-        avg: 0.985, // (47 + 150) / (50 + 150)
-        1: 0.94, // 47 / 50
-        2: 1.0 // 150 / 150
-      },
-      {
-        id: 132,
-        avg: 0.82, // (39 + 125) / (50 + 150)
-        1: 0.78, // 39 / 50
-        2: 0.833 // late: (140 - 15) / 150
-      }
-    ];
-  
-    return result;
-  }
-  
-  const result = getLearnerData(CourseInfo, AssignmentGroup, LearnerSubmissions);
-  
-  console.log(result);*/
+ 
 
   //Create an array with learner Id's
   const learner_Ids=getLeanerIds(LearnerSubmissions);
@@ -121,15 +99,13 @@ const CourseInfo = {
     for(let i=0;i<aobj.length;i++){
         if(aobj[i].id==assignId){
             maxPoint=aobj[i].points_possible;
-           // console.log("Points Possible = "+maxPoint);
+           
         }
-        //console.log(aobj[i]);
+       
     }
     return maxPoint;
   }
-  //console.log(maxPoints);
-  //const assignIdList=getAssignIds(125);
-  //console.log(assignIdList);
+ 
   function getAssignIds(lid){
     let assignIdLocal=[];
     LearnerSubmissions.forEach(element => {
@@ -147,8 +123,18 @@ const CourseInfo = {
             getScoreLocal.push(element.submission.score);
         
     });
-    //console.log(assignIdLocal);
+    
     return getScoreLocal;
+  }
+  function getSubmissionDateFromLeanerSub(lid,assignId){
+    let getDateLocal=[];
+    LearnerSubmissions.forEach(element => {
+        if(element.learner_id==lid && element.assignment_id==assignId)
+          getDateLocal.push(element.submission.submitted_at);
+        
+    });
+   
+    return getDateLocal;
   }
   //Main Function
   function getLearnerData(CourseInfo, AssignmentGroup, LearnerSubmissions) {
@@ -168,33 +154,44 @@ const CourseInfo = {
         let scoreSum=0;
         let pointMaxSum=0;
         let average=0;
+        let date1=new Date('2023-3-1');
         finalObjects['id']=lid;
         console.log(finalObjects);
         for(let j=0;j<assignIds.length;j++)
             {
                 console.log(assignIds[j]);
                 let score=getScoreFromLeanerSub(lid,assignIds[j]);
+                let scoreParsed=parseInt(score);
+                let submissionDate=getSubmissionDateFromLeanerSub(lid,assignIds[j]);
+                console.log("Submission Date");
+                 console.log(submissionDate);
+                let date2=new Date(submissionDate);
                 let pointMax=getPointsPossible(assignIds[j]);
-                let averageLocal=parseInt(score)/pointMax;
-                scoreSum=scoreSum+parseInt(score);
+                if(pointMax==0){
+                  throw new Error("Dividing by zero is not possible");
+                }
+                let averageLocal=scoreParsed/pointMax;
+                if(date1.valueOf()<date2.valueOf())
+                  {
+                    scoreParsed=scoreParsed-scoreParsed*.1;
+                  }
+                scoreSum=scoreSum+scoreParsed;
                 pointMaxSum=pointMaxSum+pointMax;
                 console.log(averageLocal);
                 let aid=parseInt(assignIds[j]);
                 finalObjects[aid]=averageLocal.toFixed(3);
-                console.log("Score= "+score+" Point Max= "+pointMax);
+                console.log("Score= "+scoreParsed+" Point Max= "+pointMax);
 
             }
             console.log("scoreSum= "+scoreSum+" PointMaxSum= "+pointMaxSum);
             average=scoreSum/pointMaxSum
             console.log("Average= "+average);
             finalObjects['ave']=average.toFixed(3);
-        //console.log("Main Function2");
-        //console.log(assignIds);
+       
         finalArray.push(finalObjects);
+       
     }
-    //console.log(finalArray);
-   //let finalArray= new Array();
-   //let finalObjects=new Object();
+    
    
     return finalArray;
     
@@ -207,6 +204,6 @@ const CourseInfo = {
     console.error(error);
   }
  
-  //console.log(result);
+ 
   
   
